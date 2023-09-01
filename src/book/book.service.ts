@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Book } from './schemas/book.schema';
 import * as mongoose from 'mongoose';
+import { Auth } from '../auth/schemas/auth.schema';
 
 @Injectable()
 export class BookService {
@@ -20,8 +21,9 @@ export class BookService {
     return book;
   }
 
-  async createOne(book: Book): Promise<Book> {
-    const add = await this.bookModel.create(book);
+  async createOne(book: Book, user: Auth): Promise<Book> {
+    const data = Object.assign(book, { user: user._id });
+    const add = await this.bookModel.create(data);
     return add;
   }
 
