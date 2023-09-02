@@ -6,7 +6,7 @@ import * as bcrypt from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
-
+import { createTransport } from 'nodemailer'
 @Injectable()
 export class AuthService {
   constructor(
@@ -33,6 +33,20 @@ export class AuthService {
     if (user) {
       const validPassword = await bcrypt.compare(password, user.password)
       if (validPassword) {
+        const transporter = createTransport({
+          service: "gmail",
+          auth: {
+            // TODO: replace `user` and `pass` values from <https://forwardemail.net>
+            user: process.env.EMAIL,
+            pass: process.env.PASSWORD
+          }
+        });
+        await transporter.sendMail({
+          from: '"Aymen Boauzra" <aymenbouazra994@gmail.com>', // sender address
+          to: "aymenbouazra994@gmail.com", // list of receivers
+          subject: "Hello ✔", // Subject line
+          html: "<b>Hello world:</b>", // html body
+        });
         const token = await this.jwtService.sign({ id: user._id });
         return { token };
       }
