@@ -25,7 +25,7 @@ export class CreateBookDto {
   readonly author: string;
 
   @IsNotEmpty()
-  @IsNumber()
+  // @IsNumber()
   readonly price: number;
 
   @IsNotEmpty()

@@ -9,7 +9,7 @@ export class BookService {
   constructor(
     @InjectModel(Book.name)
     private bookModel: mongoose.Model<Book>,
-  ) {}
+  ) { }
 
   async findAll(): Promise<Book[]> {
     const books = await this.bookModel.find();
@@ -22,7 +22,9 @@ export class BookService {
   }
 
   async createOne(book: Book, user: Auth): Promise<Book> {
-    const data = Object.assign(book, { user: user._id });
+    const data = Object.assign(book, { price: Number(book.price), user: user._id });
+    console.log(data);
+
     const add = await this.bookModel.create(data);
     return add;
   }
